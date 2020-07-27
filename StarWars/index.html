@@ -9,24 +9,18 @@
     <body>
         <section align="center">
             
-            <h1>Star Wars Wiki</h1>
+            <h1>STAR WARS WIKI</h1>
             <p>Know all about your favorite Star Wars character</p>
 
-            <div>
-                <label for="character">Character:</label>
-                <input type="text" id="character" name="character" required minlength="2" size="10">
-                <button type="button" onclick="getStarWarsByName()">Search</button>
+            <form id="search-form">                            
+                <label for="starwars-character">Character:</label>
+                <input type="text" id="starwars-character">
+                <button>Search</button>
+            </form>
 
-                <p id="name"></p>
-                <p id="hair"></p>
-                <p id="color"></p>
-                <p id="eyeColor"></p>
-                <p id="birthYear"></p>
-                <p id="mass"></p>
+            <div id="word-typed" aria-live="polite"></div>
 
-                    
-
-            </div>
+            <div id="listCharacters" aria-live="polite"></div>
 
         </section>
         
