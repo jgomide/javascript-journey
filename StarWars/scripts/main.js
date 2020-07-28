@@ -2,6 +2,9 @@ var data = {
   listItems: []  
 };
 
+var inputString = '';
+
+
 //clean malicious code inserted
 var sanitizeHTML = function (str) {
 	var temp = document.createElement('div');
@@ -9,49 +12,74 @@ var sanitizeHTML = function (str) {
 	return temp.innerHTML;
 };
 
-function getStarWarsByName(name){
+async function getStarWarsByName(name){
+
+	console.log("getStarWarsByName1 typeof " + typeof(name));
 	
-	var objStarWars;
-	
-	fetch('https://swapi.dev/api/people/?search=' + name)
-		.then(response => {
-			if (!response.ok){
-				throw Error("ERROR")
-			}
-			return response.json();	 
-		})
-		.then(obj => {
-			
-			// console.log(obj.results);
-			// console.log(JSON.stringify(obj));
-			// console.log("typeof " + typeof(obj));
-			
-			const html = obj.results.map(Character => {
-				return `<h3>Name: ${Character.name}</h3>    
-						<p>Birth year: ${Character.birth_year}</p>	
-						<p>Hair color: ${Character.hair_color}</p>
-						<p>Eye color: ${Character.eye_color}</p>
-						<p>Mass: ${Character.mass}</p>`; 
-			})
-			.join("");
-			
-			// console.log(html);
+	try {
+		let response = await fetch('https://swapi.dev/api/people/?search=' + name);
 
-			document.querySelector('#listCharacters').innerHTML = html;
+		let content;
 
-			//problem: working on return of the function 
-			objStarWars = obj;
+		if (!response.ok){
+			throw new Error(`HTTP error! Status: ${response.status}`);
+		} else {
 
-			
+			content = await response.json();
 
-		})	
-		.catch(function(error){
-			console.error('Somethign went wrong');
-			console.error(error);
-		});
+			console.log("getStarWarsByName2 typeof " + typeof(name));
+			console.log("Body is:", content)			 		 
+		}		
 
-	return objStarWars;
+		return content;
 		
+	} catch(e) {
+		console.log(e);
+	}
+	
+};
+
+async function createContent(objStarWars) {
+
+	let obj = await objStarWars;
+
+	console.log("createContent typeof " + typeof(objStarWars));
+	
+	let html = await objStarWars.results.map(Character => {
+		return `
+			<div>
+				<h3>Name: ${Character.name}</h3>    
+				<p>Birth year: ${Character.birth_year}</p>	
+				<p>Hair color: ${Character.hair_color}</p>
+				<p>Eye color: ${Character.eye_color}</p>
+				<p>Mass: ${Character.mass}</p>
+			<div>
+			`; 			
+	})
+	.join("");
+	
+	return html;
+};
+
+async function displayHtml(inputString) {
+
+	let input2 = `<h3>Search for2: ${inputString} </h3>`;
+	document.getElementById("word-typed2").innerHTML = input2;        
+
+	console.log("displayHtml1 typeof " + typeof(inputString));
+
+	let objStarWars = await getStarWarsByName(inputString);
+
+	console.log("displayHtml2 typeof " + typeof(objStarWars));
+
+	html = await createContent(objStarWars)
+
+	console.log("displayHtml3 typeof " + typeof(html));
+
+	document.querySelector('#listCharacters').innerHTML = html;
+	
+	console.log("displayHtml4 objStarWars " + typeof(html));
+
 };
 
 document.addEventListener('submit', function(event) {
@@ -63,19 +91,24 @@ document.addEventListener('submit', function(event) {
 	event.preventDefault();
 
 	//get the character name from input
-	var item = event.target.querySelector('#starwars-character');
-    if (!item || item.length < 1) return;
+	let character = event.target.querySelector('#starwars-character');
+	if (!character || character.length < 1) return;
 	
 	//searched word
-	var input = `<h3>Search for: ${item.value} </h3>`;
+	let input = `<h3>Search for: ${character.value} </h3>`;
 	document.getElementById("word-typed").innerHTML = input;        
 	
+	
+	//I TRIED IT BUT ALWAYS "typeof0000" get first then createContent.
 	//problem: working on return of the function 
-	var objStarWars = getStarWarsByName(item.value);
-	console.log("typeof objStarWars " + typeof(objStarWars));
+	// let objStarWars = getStarWarsByName(character)
+	// let html = createContent(objStarWars)
+	// displayHtml(html);
 
-	//clear the field and return to focus
-	item.value = '';
-	item.focus();	
+	console.log("typeof0000 objStarWars " + typeof(character));
+
+	// //clear the field and return to focus
+	character.value = '';
+	character.focus();	
 
 }, false);

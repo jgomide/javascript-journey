@@ -15,10 +15,12 @@
             <form id="search-form">                            
                 <label for="starwars-character">Character:</label>
                 <input type="text" id="starwars-character">
-                <button>Search</button>
+                <button onclick="displayHtml(document.getElementById('starwars-character').value)">Search</button> 
+                <!-- <button>Search</button> -->
             </form>
 
             <div id="word-typed" aria-live="polite"></div>
+            <div id="word-typed2" aria-live="polite"></div>
 
             <div id="listCharacters" aria-live="polite"></div>
 
