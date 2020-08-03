@@ -1,6 +1,3 @@
-var inputString = '';
-
-
 //clean malicious code inserted
 var sanitizeHTML = function (str) {
 	var temp = document.createElement('div');
@@ -9,8 +6,6 @@ var sanitizeHTML = function (str) {
 };
 
 async function getStarWarsByName(name){
-
-	console.log("getStarWarsByName1 typeof " + name + typeof(name));
 	
 	try {
 		let response = await fetch('https://swapi.dev/api/people/?search=' + name);
@@ -21,10 +16,7 @@ async function getStarWarsByName(name){
 			throw new Error(`HTTP error! Status: ${response.status}`);
 		} else {
 
-			content = await response.json();
-
-			console.log("getStarWarsByName2 typeof " + typeof(name));
-			console.log("Body is:", content)			 		 
+			content = await response.json();			
 		}		
 
 		return content.results;
@@ -50,32 +42,14 @@ async function createContent(stringStarWars) {
 			</div>
 			`; 			
 	})
-	.join("");
-
-	console.log("createContent2 typeof " + typeof(html));
-	console.log("createContent2  " + html);
+	.join("");	
 	
 	return html;
 };
 
 async function displayHtml(html) {
 
-	// let input2 = `<h3>Search for2: ${inputString} </h3>`;
-	// document.getElementById("word-typed2").innerHTML = input2;        
-
-	// console.log("displayHtml1 typeof " + typeof(inputString));
-
-	// let objStarWars = await getStarWarsByName(inputString);
-
-	// console.log("displayHtml2 typeof " + typeof(objStarWars));
-
-	// html = await createContent(objStarWars)
-
-	console.log("displayHtml3 typeof " + typeof(html));
-
 	document.querySelector('#listCharacters').innerHTML = html;
-	
-	console.log("displayHtml4 objStarWars " + typeof(html));
 
 };
 
@@ -95,11 +69,9 @@ document.addEventListener('submit', function(event) {
 	let input = `<h3>Search for: ${character.value} </h3>`;
 	document.getElementById("word-typed").innerHTML = input;        
 	
-	//I TRIED IT BUT ALWAYS "typeof0000" get first then createContent.
-	//problem: working on return of the function 
+	//promisses / async
 	getStarWarsByName(character.value).then(result => {
 
-		console.log("result " + result);
 		createContent(result).then(html => {
 			displayHtml(html);
 		}).catch(e => {
@@ -109,8 +81,6 @@ document.addEventListener('submit', function(event) {
 	}).catch(e => {
 		console.log("Error getByName", e);
 	});
-
-	console.log("typeof0000 objStarWars " + typeof(character));
 
 	// //clear the field and return to focus
 	character.value = '';
